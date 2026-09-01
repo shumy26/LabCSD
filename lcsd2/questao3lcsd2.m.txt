@@ -1,0 +1,32 @@
+s = tf('s');
+
+G_pre = 4;
+
+G1 = 1/(s+1);
+G2 = s/(s^2+2);
+H1 = (4*s+2)/(s^2+2*s+1);
+Gfwd_1 = series(G1, G2);
+T1 = feedback(Gfwd_1, H1, -1);
+
+G3 = 1/(s^2);
+T2 = feedback(G3, 50, 1);
+
+G_direto = series(T1, T2);
+H2 = (s^2 + 2) / (s^3 + 14);
+T_global = feedback(G_direto, H2, -1);
+
+H = series(G_pre, T_global);
+
+disp('Função de Transferência H(s):');
+H
+
+p = pole(H);
+z = zero(H);
+disp('Polos:'); disp(p);
+disp('Zeros:'); disp(z);
+
+figure;
+pzmap(H);
+grid on;
+title('Diagrama de Polos e Zeros de H(s)');
+
